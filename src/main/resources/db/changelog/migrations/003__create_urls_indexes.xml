@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+  <changeSet id="003__add_hash_indexes_to_urls" author="nalivaiko">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <tableExists tableName="urls"/>
+        <not>
+          <indexExists indexName="idx_urls_short_code_hash"/>
+        </not>
+      </and>
+    </preConditions>
+
+    <createIndex tableName="urls"
+      indexName="idx_urls_original_url_idx">
+      <column name="original_url"/>
+    </createIndex>
+
+    <createIndex tableName="urls"
+      indexName="idx_urls_short_code_idx">
+      <column name="short_code"/>
+    </createIndex>
+
+    <rollback>
+      <dropIndex indexName="idx_urls_short_code_hash" tableName="urls"/>
+      <dropIndex indexName="idx_urls_original_url_hash" tableName="urls"/>
+    </rollback>
+  </changeSet>
+
+</databaseChangeLog>
